@@ -6,7 +6,7 @@ class Organsim:
         self.height     = height
         self.width      = width
         self.density    = 1
-        self.friction   = 1
+        self.friction   = 3
         self.elasticity = 1
         self.pos        = (int(width*0.5), int(height*0.5))
 

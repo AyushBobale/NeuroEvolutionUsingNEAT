@@ -1,74 +1,50 @@
+import os
+from simulation import Simulation
+from organism import Organsim
+import neat
 import pygame
-import pymunk
-import pymunk.pygame_util
-import math
 
-pygame.init()
-WIDTH, HEIGHT = 1980,1080
-window = pygame.display.set_mode((WIDTH, HEIGHT))
-
-
-def draw(window, space, draw_options):
-    window.fill("white")
-    space.debug_draw(draw_options)
-    pygame.display.update()
-
-def pause_draw(window):
-    window.fill("black")
-    #space.debug_draw(draw_options)
-    pygame.display.update()
-
-
-def create_boundaries(space, width, height):
-    rects = [
-        [(width/2, height-(WIDTH/100)), (width, (WIDTH/100) * 2)],
-        [(width/2, (WIDTH/100)), (width, (WIDTH/100)*2)],
-        [((WIDTH/100), height/2), ((WIDTH/100)*2, height)],
-        [(width-(WIDTH/100), height/2), ((WIDTH/100)*2, height)]
-    ]
-    for pos, size in rects:
-        body = pymunk.Body(body_type=pymunk.Body.STATIC)
-        body.position = pos
-        shape = pymunk.Poly.create_box(body, size)
-        shape.elasticity = 0.4
-        shape.friction = 0.5
-        space.add(body, shape)
-
-
-
-def run(window, width, height):
-    run = True
-    clock = pygame.time.Clock()
-    fps = 60
-    dt = 1/(fps)
-
-    space = pymunk.Space()
-    space.gravity = (0, 981)
-
-    create_boundaries(space, WIDTH, HEIGHT)
-    draw_options = pymunk.pygame_util.DrawOptions(window)
-
-    from organism import Organsim
-    new_org = Organsim(space, WIDTH, HEIGHT)
-    set_draw = True
-
-    while run:
+def run(width, height, fps):
+    sim_instance = Simulation(1980, 1080, 60)
+    running  = True
+    sim_instance.createBoundaries()
+    new_org = Organsim(sim_instance.space, sim_instance.width, sim_instance.height)
+    
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                running = False
                 break
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
-            new_org.sMove(event)
-        space.step(dt)
-        if set_draw:
-            draw(window, space, draw_options)
-        #print(clock.get_fps())
-        clock.tick(fps)
-    
+            new_org.sMove(event, force_multiplier=0.3) #very high force multiplier will break the simulation
+        
+        sim_instance.fpsCheck()
+        sim_instance.draw()
+        sim_instance.step()
     pygame.quit()
+
+def eval_genome(genomes, config):
+    for genomeid, genome in genomes:
+        genome.fitness = 1
+    pass
+
+def runNeat(config):
+    #pop = neat.Checkpointer.restore_checkpoint('neat-checkpoint1')
+    pop = neat.Population(config)
+    pop.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    pop.add_reporter(stats)
+    pop.add_reporter(neat.Checkpointer(1))
+
+    pop.run(eval_genome, 50)
 
 
 if __name__ == "__main__":
-    run(window, WIDTH, HEIGHT)
+    LOCALDIR = os.path.dirname(__file__)
+    config_path = os.path.join(LOCALDIR, "config.txt")
 
+    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
+                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
+                         config_path)
+
+    #run(1270, 720, 60)
+    runNeat(config)

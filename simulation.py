@@ -68,7 +68,7 @@ def run(sim_instance):
             if event.type == pygame.QUIT:
                 running = False
                 break
-
+            new_org.sMove(event)
         sim.fpsCheck()
         sim_instance.draw()
         sim.step()
