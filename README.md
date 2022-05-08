@@ -1,2 +1,7 @@
 # NeuroEvolutionUsingNEAT
-This is python project aimed at evolving creatures that are simualted in 2D world where, the goal is to identify such Neural Nets that perform best for the given fitness function using genetic algorithm.
+
+A python project created to train creatures how to walk as far as possible in a single direction.
+
+The 2D world is simulated using the pymunk library of python.
+
+The genetic algorithm is implemented using the python's NEAT library.
