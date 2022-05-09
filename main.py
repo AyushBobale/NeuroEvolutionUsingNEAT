@@ -23,7 +23,7 @@ def run(sim_instance):
 """
 
 def eval_genome(genomes, config):
-    sim_instance    = Simulation(1270, 720, 60)
+    sim_instance    = Simulation(1800, 720, 60)
     networks = []
     for genomeid, genome in genomes:
         network         = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -44,7 +44,7 @@ def runNeat(config):
     pop.add_reporter(stats)
     pop.add_reporter(neat.Checkpointer(1))
 
-    pop.run(eval_genome, 50)
+    pop.run(eval_genome, 100)
 
 
 if __name__ == "__main__":
