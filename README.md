@@ -19,6 +19,13 @@ pip install pygame
 pip install neat-python
 python simulation.py 
 ```
+## Starting gens [Generation 1 and onwards]
+![Simulation Screen Shot](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/startgen.gif?raw=true "Generation 1 and onwards")
+
+## Late gens [Generation 81 and onwards]
+![Simulation Screen Shot](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/endgen.gif?raw=true "Generation 81 and onwards")
+
+
 * For Blue leg
     * A - Left
     * S - Down
