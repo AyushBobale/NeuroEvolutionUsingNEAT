@@ -3,10 +3,29 @@ import pymunk
 import pymunk.pygame_util
 import math
 from organism import Organsim
+import neat
 
+
+def run(sim_instance):
+    running  = True
+    sim_instance.createBoundaries()
+    new_org = Organsim(sim.space, sim.width, sim.height)
+    
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                break
+            new_org.moveHuman(event)
+        
+        print(new_org.getState())
+        sim.fpsCheck()
+        sim_instance.draw()
+        sim.step()
+    pygame.quit()
 
 class Simulation:
-    def __init__(self, width, height, fps):
+    def __init__(self, width, height, fps, dt=None):
         pygame.init()
         
         self.width      = width
@@ -16,6 +35,9 @@ class Simulation:
         self.fps        = fps
         self.run        = True
         self.dt         = 1/fps
+        if dt:
+            self.dt = dt
+        
         self.clock      = pygame.time.Clock()
 
         self.space          = pymunk.Space()
@@ -56,26 +78,40 @@ class Simulation:
     
     def getFps(self):
         return self.clock.get_fps()
-
-
-def run(sim_instance):
-    running  = True
-    sim_instance.createBoundaries()
-    new_org = Organsim(sim.space, sim.width, sim.height)
     
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                break
-            new_org.sMove(event)
-        sim.fpsCheck()
-        sim_instance.draw()
-        sim.step()
-    pygame.quit()
+    def trainAIBootleg(self, networks):
+        frame_count = 0
+        run = True
+        self.createBoundaries()
+        organisms = [Organsim(self.space, self.width, self.height) for network in networks]
+
+        while run:
+            if frame_count > 300:
+                fitness = []
+                for organism in organisms:
+                    fitness.append(organism.getFitness())
+                return fitness
+                
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            
+            for i, organism in enumerate(organisms):
+                inputs = organism.getState()
+                output = networks[i].activate(inputs)
+                organism.moveAI(output, force_multiplier=0.1)
+                
+
+            self.step()
+            self.fpsCheck()
+            #print(self.getFps())
+            self.draw()
+            frame_count += 1
+        
 
 if __name__ == "__main__":
     sim = Simulation(1000, 800, 60)
-    run(sim)
+    sim.trainAIBootleg([1,2])
+    #run(sim)
 
             

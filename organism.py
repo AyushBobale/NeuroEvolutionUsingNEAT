@@ -1,6 +1,17 @@
 import pymunk
 import pygame
 
+
+"""
+This is not the final type of organism
+Have to make changes such that the creation of bodies and shapes is automated via loops increasing readability
+create a get info function that returns  [postion, velocity, rotation, angular_velocity] of all the bodies as an array
+this array can be said as the state of the organism
+which can be used to train the algorithm
+
+Note : for myself
+    Try creating a simple organism with only one bar and try training feasibility 
+"""
 class Organsim:
     def __init__(self, space, width, height):
         self.height     = height
@@ -8,7 +19,7 @@ class Organsim:
         self.density    = 1
         self.friction   = 3
         self.elasticity = 1
-        self.pos        = (int(width*0.5), int(height*0.5))
+        self.pos        = (int(width*0.1), int(height*0.7))
 
         self.mainbody           = pymunk.Body()
         self.mainbody.position  = self.pos
@@ -37,32 +48,60 @@ class Organsim:
         self.pivotjoint      = pymunk.constraints.PivotJoint(self.mainbody, self.mainbody_1, (self.pos[0] ,self.pos[1] - y_offset) )
         self.rotatoryjoint   = pymunk.constraints.RotaryLimitJoint(self.mainbody, self.mainbody_1, 0.17, 1.5)
 
+
+        self.bodies = [self.mainbody, self.mainbody_1]          #"""Find a better implementation of this"""
         space.add(self.mainbody, self.mainbody_vis, self.mainbody_1,  self.mainbody_1vis, self.pivotjoint, self.rotatoryjoint)
     
-    def getShapes(self):
-        return self.mainbody_vis
-    
-    def move(self, pressed, force_multiplier = 1):
+    def getState(self):
+        """
+        Returns a list of tuple of [postion, velocity, rotation, angular_velocity] for each body in the organism
+        """
+        data = []
+        for body in self.bodies:
+            #print(new_org.getShapes()[0].body.rotation_vector, new_org.getShapes()[0].body.angular_velocity, new_org.getShapes()[0].body.position, new_org.getShapes()[0].body.velocity)
+            data.append(body.position.x/self.width)
+            data.append(body.position.y/self.height)
+            data.append(body.velocity.x/self.width)
+            data.append(body.velocity.y/self.height)
+            data.append(body.rotation_vector.x)
+            data.append(body.rotation_vector.y)
+            data.append(body.angular_velocity)
+            
+
+        #scaling required
+        return tuple(data)
+
+    def getFitness(self):
+        x = 0
+        y = 0
+        for body in self.bodies:
+            x += body.position.x
+            y += body.position.y
+        return ((x+y)/(len(self.bodies)*2))/self.width
+
+    def moveAI(self, ouput, force_multiplier = 1):
         force_multiplier = force_multiplier * self.height * self.width
-        if pressed == 'A':
+        maxop = max(ouput)
+        maxopid = ouput.index(maxop)
+        if maxopid == 0:
             self.mainbody_1vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
-        if pressed == 'S':
+        if maxopid == 1:
             self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
-        if pressed == 'D':
+        if maxopid == 2:
             self.mainbody_1vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
-        if pressed == 'W':
+        if maxopid == 3:
             self.mainbody_1vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
-    
-        if pressed == 'left':
+        if maxopid == 4:
             self.mainbody_vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
-        if pressed == 'down':
+        if maxopid == 5:
             self.mainbody_vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
-        if pressed == 'right':
+        if maxopid == 6:
             self.mainbody_vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
-        if pressed == 'up':
+        if maxopid == 7:
             self.mainbody_vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
+        
     
-    def sMove(self, event, force_multiplier = 1):
+    def moveHuman(self, event, force_multiplier = 1):
         force_multiplier = force_multiplier * self.height * self.width
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
