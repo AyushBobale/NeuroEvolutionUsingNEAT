@@ -70,7 +70,7 @@ class Simulation:
             body.position       = pos
             shape               = pymunk.Poly.create_box(body, size)
             shape.elasticity    = 0.4
-            shape.friction      = 5
+            shape.friction      = 0.5
             self.space.add(body, shape)
 
     def fpsCheck(self):

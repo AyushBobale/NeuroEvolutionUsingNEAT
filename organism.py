@@ -8,6 +8,9 @@ Have to make changes such that the creation of bodies and shapes is automated vi
 create a get info function that returns  [postion, velocity, rotation, angular_velocity] of all the bodies as an array
 this array can be said as the state of the organism
 which can be used to train the algorithm
+
+Note : for myself
+    Try creating a simple organism with only one bar and try training feasibility 
 """
 class Organsim:
     def __init__(self, space, width, height):
@@ -83,23 +86,19 @@ class Organsim:
         if maxopid == 0:
             self.mainbody_1vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
         if maxopid == 1:
-            pass
-            #self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
+            self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
         if maxopid == 2:
             self.mainbody_1vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
         if maxopid == 3:
-            pass
-            #self.mainbody_1vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
+            self.mainbody_1vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
         if maxopid == 4:
             self.mainbody_vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
         if maxopid == 5:
-            pass
-            #self.mainbody_vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
+            self.mainbody_vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
         if maxopid == 6:
             self.mainbody_vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
         if maxopid == 7:
-            pass
-            #self.mainbody_vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
+            self.mainbody_vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
         
     
     def moveHuman(self, event, force_multiplier = 1):
