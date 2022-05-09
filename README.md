@@ -26,14 +26,3 @@ python main.py
 ## For later generations [Generation 81]
 ![Ending Generation](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/endgen.gif?raw=true "Generation 81")
 
-* For Blue leg
-    * A - Left
-    * S - Down
-    * D - Right
-    * W - Up
-
-* For Blue leg
-    * LeftArrow - Left
-    * DownArrow - Down
-    * RightArrow - Right
-    * UpArrow - Up

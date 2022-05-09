@@ -1,29 +1,12 @@
 import os
 from simulation import Simulation
+from SimulationNoBounds import SimulationNoBounds
 from organism import Organsim
 import neat
 import pygame
-"""
-def run(sim_instance):
-    running  = True
-    sim_instance.createBoundaries()
-    new_org = Organsim(sim_instance.space, sim_instance.width, sim_instance.height)
-    
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                break
-            new_org.sMove(event, force_multiplier=0.3) #very high force multiplier will break the simulation
-        
-        sim_instance.fpsCheck()
-        sim_instance.draw()
-        sim_instance.step()
-    pygame.quit()
-"""
 
 def eval_genome(genomes, config):
-    sim_instance    = Simulation(1800, 720, 60)
+    sim_instance    = SimulationNoBounds(1800, 720, 60)
     networks = []
     for genomeid, genome in genomes:
         network         = neat.nn.FeedForwardNetwork.create(genome, config)

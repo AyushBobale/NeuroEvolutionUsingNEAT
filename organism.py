@@ -3,14 +3,6 @@ import pygame
 
 
 """
-This is not the final type of organism
-Have to make changes such that the creation of bodies and shapes is automated via loops increasing readability
-create a get info function that returns  [postion, velocity, rotation, angular_velocity] of all the bodies as an array
-this array can be said as the state of the organism
-which can be used to train the algorithm
-
-Note : for myself
-    Try creating a simple organism with only one bar and try training feasibility 
 """
 class Organsim:
     def __init__(self, space, width, height):
