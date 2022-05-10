@@ -17,7 +17,7 @@ The genetic algorithm is implemented using the python's NEAT library.
 ![Starting Generation](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/bipedalinit.gif?raw=true)
 
 ### For later generations [Not what I expected to be the behaviour even with a custom modified fitness function]
-![Ending Generation](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/bipedallater.gif?raw=true)
+![Ending Generation](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/bipedalfinal.gif?raw=true)
 
 
 
