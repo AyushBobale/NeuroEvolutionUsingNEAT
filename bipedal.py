@@ -30,7 +30,7 @@ class Bipedal:
         self.leg_pos        = 0.98      # defines how low the leg will be consequently how low the joint
         self.color          = (77, 225, 208, 100) #make colors derived that parts inherit colors
         self.thigh_color    = (int(self.color[0] * 0.9), int(self.color[1] * 0.9), int(self.color[2] * 0.9), 100)
-        self.leg_color    = (int(self.color[0] * 0.7), int(self.color[1] * 0.7), int(self.color[2] * 0.7), 100)
+        self.leg_color      = (int(self.color[0] * 0.7), int(self.color[1] * 0.7), int(self.color[2] * 0.7), 100)
         #==========================================================================
         self.filter         = pymunk.ShapeFilter(1)
         """
@@ -57,7 +57,7 @@ class Bipedal:
         self.mainbody_size                  = self.size  #---------------------------------------Imp global size all sizes are dervied from this size
         self.mainbody_shape                 = pymunk.Poly.create_box(self.mainbody, self.mainbody_size)
         self.mainbody_shape.color           = self.color
-        self.mainbody_shape.mass            = self.mainbody_size[0] * self.mainbody_size[1] * self.density + 5000
+        self.mainbody_shape.mass            = self.mainbody_size[0] * self.mainbody_size[1] * self.density
         self.mainbody_shape.elasticity      = self.elasticity
         self.mainbody_shape.friction        = self.friction
         self.mainbody_shape.filter          = self.filter
@@ -165,6 +165,9 @@ class Bipedal:
         for body in self.bodies:
             x += body.position.x
             y += body.position.y
+        
+        if self.mainbody.position.y > self.left_leg.position.y or self.mainbody.position.y > self.left_leg.position.y :
+            return 0
         return ((x+y)/(len(self.bodies)*2))/self.width
 
     def moveHuman(self, event, force_multiplier=1):

@@ -6,6 +6,10 @@ import neat
 import pickle
 import pygame
 
+"""
+
+"""
+
 def eval_genome(genomes, config):
     #16:9 aspect rations work properly
     #last argument is delta time dont change unless necessary
@@ -16,13 +20,13 @@ def eval_genome(genomes, config):
     for genomeid, genome in genomes:
         network         = neat.nn.FeedForwardNetwork.create(genome, config)
         networks.append(network)
-    fitness = sim_instance.trainAI(networks, 300) #Simultion No bounds train ai function requires no of frames the gen to be trained
+    fitness = sim_instance.trainAI(networks, 600) #Simultion No bounds train ai function requires no of frames the gen to be trained
     for i, (genomeid, genome) in enumerate(genomes):
         genome.fitness = fitness[i]
 
 
 def testAI(config):
-    with open("best_pickle","rb") as f:
+    with open(r"C:\Users\Ayush\Documents\Documents folder\NeuroEvolutionUsingNEAT\checkpoint-backup\best_pickle720pbipedal99gen","rb") as f:
         winner = pickle.load(f)
     sim_instance    = SimulationNoBounds(1270, 720, 60)
     networks = []
@@ -38,7 +42,7 @@ def runNeat(config):
     pop.add_reporter(stats)
     pop.add_reporter(neat.Checkpointer(1))
 
-    winner = pop.run(eval_genome, 5)
+    winner = pop.run(eval_genome, 1)
     with open("best_pickle", "wb") as f:
         pickle.dump(winner, f)
 
@@ -50,6 +54,5 @@ if __name__ == "__main__":
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
-    #run(1270, 720, 60)
     #runNeat(config)
     testAI(config)

@@ -156,7 +156,7 @@ class SimulationNoBounds:
             for i, organism in enumerate(organisms):
                 inputs = organism.getState()
                 output = networks[i].activate(inputs)
-                organism.moveAI(output, force_multiplier=0.3)
+                organism.moveAI(output, force_multiplier=0.4)
 
             self.step()
             self.fpsCheck()
