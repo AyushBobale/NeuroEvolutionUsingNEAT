@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 neat-checkpoint-*
+best_pickle

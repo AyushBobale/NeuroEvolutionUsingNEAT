@@ -1,23 +1,34 @@
 import os
 from simulation import Simulation
-from SimulationNoBounds import SimulationNoBounds
+from simulationNoBounds import SimulationNoBounds
 from organism import Organsim
 import neat
+import pickle
 import pygame
 
 def eval_genome(genomes, config):
-    sim_instance    = SimulationNoBounds(1800, 720, 60)
+    #16:9 aspect rations work properly
+    #last argument is delta time dont change unless necessary
+    #can be left as None [only for fps 60]
+    #3rd argument is fps
+    sim_instance    = SimulationNoBounds(1270, 720, 100, 1/60)
     networks = []
     for genomeid, genome in genomes:
         network         = neat.nn.FeedForwardNetwork.create(genome, config)
         networks.append(network)
-        #genome.fitness  = 1
-    fitness = sim_instance.trainAIBootleg(networks)
-    print(fitness)
+    fitness = sim_instance.trainAI(networks, 300) #Simultion No bounds train ai function requires no of frames the gen to be trained
     for i, (genomeid, genome) in enumerate(genomes):
         genome.fitness = fitness[i]
 
-    
+
+def testAI(config):
+    with open("best_pickle","rb") as f:
+        winner = pickle.load(f)
+    sim_instance    = SimulationNoBounds(1270, 720, 60)
+    networks = []
+    network         = neat.nn.FeedForwardNetwork.create(winner, config)
+    networks.append(network)
+    sim_instance.trainAI(networks, 3000000)
 
 def runNeat(config):
     #pop = neat.Checkpointer.restore_checkpoint('neat-checkpoint1')
@@ -27,7 +38,9 @@ def runNeat(config):
     pop.add_reporter(stats)
     pop.add_reporter(neat.Checkpointer(1))
 
-    pop.run(eval_genome, 100)
+    winner = pop.run(eval_genome, 5)
+    with open("best_pickle", "wb") as f:
+        pickle.dump(winner, f)
 
 
 if __name__ == "__main__":
@@ -38,4 +51,5 @@ if __name__ == "__main__":
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     #run(1270, 720, 60)
-    runNeat(config)
+    #runNeat(config)
+    testAI(config)

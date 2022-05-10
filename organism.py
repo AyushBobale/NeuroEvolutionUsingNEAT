@@ -78,26 +78,30 @@ class Organsim:
         if maxopid == 0:
             self.mainbody_1vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
         if maxopid == 1:
-            self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
+            pass
+            #self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
         if maxopid == 2:
             self.mainbody_1vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
         if maxopid == 3:
-            self.mainbody_1vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
+            pass
+            #self.mainbody_1vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
         if maxopid == 4:
             self.mainbody_vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
         if maxopid == 5:
-            self.mainbody_vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
+            pass
+            #self.mainbody_vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
         if maxopid == 6:
             self.mainbody_vis.body.apply_impulse_at_local_point((force_multiplier, 0), (0,0))
         if maxopid == 7:
-            self.mainbody_vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
+            pass
+            #self.mainbody_vis.body.apply_impulse_at_local_point((0, -force_multiplier), (0,0))
         
     
     def moveHuman(self, event, force_multiplier = 1):
         force_multiplier = force_multiplier * self.height * self.width
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                self.mainbody_1vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
+                self.mcdcainbody_1vis.body.apply_impulse_at_local_point((-force_multiplier, 0), (0,0))
             if event.key == pygame.K_s:
                 self.mainbody_1vis.body.apply_impulse_at_local_point((0, force_multiplier), (0,0))
             if event.key == pygame.K_d:

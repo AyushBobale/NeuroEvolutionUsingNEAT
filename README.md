@@ -26,3 +26,8 @@ python main.py
 ## For later generations [Generation 81]
 ![Ending Generation](https://github.com/AyushBobale/NeuroEvolutionUsingNEAT/blob/main/imgs/endgen.gif?raw=true "Generation 81")
 
+
+## To Move camera
+* Left Arrow key
+* Right Arrow Key
+
