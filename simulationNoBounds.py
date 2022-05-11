@@ -6,20 +6,18 @@ from organism import Organsim
 from human import Human
 from bipedal import Bipedal
 import neat
+import os
 
 """
 This simulation wont properly scale with all resolutions
 prefered aspect ration 16:9 prefered resolution 1980,1080 1270, 720
-Bipedal only is made to be working on 1270, 720 [can work with chaining the deafult values in the class file]
 
-For me:
-make a replay mod for any selected generation
 """
 
 def run(sim_instance):
     running  = True
     sim_instance.createBoundaries()
-    new_org = Bipedal(sim_instance.space, sim_instance.width, sim_instance.height)
+    new_org = Human(sim_instance.space, sim_instance.width, sim_instance.height)
     
     while running:
         for event in pygame.event.get():
@@ -57,7 +55,7 @@ class SimulationNoBounds:
         self.space.gravity  = (0, 981)
 
         self.camera         = [0,0]
-        self.camerasensi    = 3
+        self.camerasensi    = 10
         self.left           = False
         self.right          = False
         self.translation    = pymunk.Transform()
@@ -135,11 +133,11 @@ class SimulationNoBounds:
             if event.key == pygame.K_RIGHT:
                 self.right = False
 
-    def trainAI(self, networks, frames):
+    def trainAI(self, networks, frames, force_multiplier=0.1):
         frame_count = 0
         run = True
         self.createBoundaries()
-        organisms = [Bipedal(self.space, self.width, self.height) for network in networks]
+        organisms = [Human(self.space, self.width, self.height) for network in networks]
         """ Add the new class here """
         while run:
             if frame_count > frames:
@@ -156,7 +154,7 @@ class SimulationNoBounds:
             for i, organism in enumerate(organisms):
                 inputs = organism.getState()
                 output = networks[i].activate(inputs)
-                organism.moveAI(output, force_multiplier=0.4)
+                organism.moveAI(output, force_multiplier)
 
             self.step()
             self.fpsCheck()
@@ -171,5 +169,5 @@ if __name__ == "__main__":
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
-    #sim = SimulationNoBounds(1270, 720, 60)
-    #run(sim)
+    sim = SimulationNoBounds(1270, 720, 60)
+    run(sim)

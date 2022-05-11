@@ -131,3 +131,4 @@ dmypy.json
 neat-checkpoint-*
 best_pickle
 checkpoint-backup
+log
