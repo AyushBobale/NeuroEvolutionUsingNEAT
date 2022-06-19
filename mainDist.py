@@ -10,7 +10,7 @@ class SimulationDistributed:
     
 @ray.remote
 def trainAI(network):
-    time.sleep(0.5)
+    time.sleep(10)
     return 1
 
 #whatever this is doing should be distributed
@@ -35,13 +35,13 @@ def runNeat(config):
     pop.add_reporter(stats)
     pop.add_reporter(neat.Checkpointer(10))
 
-    winner = pop.run(eval_genome, 5)
+    winner = pop.run(eval_genome, 2)
     with open("best_pickle_dist", "wb") as f:
         pickle.dump(winner, f)
 
 
 if __name__ =="__main__":
-    ray.init()
+    ray.init(address='auto', _node_ip_address='192.168.1.5')
     LOCALDIR = os.path.dirname(__file__)
     config_path = os.path.join(LOCALDIR, "config.txt")
 

@@ -8,7 +8,7 @@ class SimulationDistributed:
         self.value = "test"
     
 def trainAI(network):
-    time.sleep(0.5)
+    time.sleep(0.1)
     return 1
 
 #whatever this is doing should be distributed
