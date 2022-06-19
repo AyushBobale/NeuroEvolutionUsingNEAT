@@ -13,6 +13,7 @@ This simulation wont properly scale with all resolutions
 prefered aspect ration 16:9 prefered resolution 1980,1080 1270, 720
 
 """
+ray.init()
 
 def run(sim_instance):
     running  = True
