@@ -2,11 +2,13 @@ import neat
 import os
 import time
 import pickle
+import ray
 
 class SimulationDistributed:
     def __init__(self):
         self.value = "test"
     
+@ray.remote
 def trainAI(network):
     time.sleep(0.5)
     return 1
@@ -19,8 +21,8 @@ def eval_genome(genomes, config):
         network         = neat.nn.FeedForwardNetwork.create(genome, config)
         networks.append(network)
     
-    fitness_future = [trainAI(network) for network in networks]
-    fitness = fitness_future
+    fitness_future = [trainAI.remote(network) for network in networks]
+    fitness = ray.get(fitness_future)
     for i, (genomeid, genome) in enumerate(genomes):
         genome.fitness = fitness[i]
     
@@ -39,6 +41,7 @@ def runNeat(config):
 
 
 if __name__ =="__main__":
+    ray.init()
     LOCALDIR = os.path.dirname(__file__)
     config_path = os.path.join(LOCALDIR, "config.txt")
 
