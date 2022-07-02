@@ -15,10 +15,10 @@ import pygame
 WIDTH               = 1270
 HEIGHT              = 720
 FORCE_MULTIPLIER    = 2.5
-TRAIN_FPS           = 120
+TRAIN_FPS           = 60
 TEST_FPS            = 60
 DT                  = 1/60
-TRAIN_FRAMES        = 600
+TRAIN_FRAMES        = 60
 TEST_FRAMES         = 300000
 PICKLE_PATH         = r"checkpoint\best_pickle720pHuman49genIC"
 #================================================================================================================
@@ -54,9 +54,9 @@ def runNeat(config):
     pop.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
-    pop.add_reporter(neat.Checkpointer(1))
+    pop.add_reporter(neat.Checkpointer(5))
 
-    winner = pop.run(eval_genome, 50)
+    winner = pop.run(eval_genome, 5)
     with open("best_pickle", "wb") as f:
         pickle.dump(winner, f)
 
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
-    #runNeat(config)
-    testAI(config)
+    runNeat(config)
+    #testAI(config)

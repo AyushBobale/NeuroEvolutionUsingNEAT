@@ -4,25 +4,40 @@ import time
 import pickle
 import ray
 
-class SimulationDistributed:
-    def __init__(self):
-        self.value = "test"
-    
+"""
+========================================================================================
+
+Make a class state [must be serializeable]
+Do functional progrming approach 
+just make the merhod remote which returns the fitness 
+**
+https://dev.to/yuikoito/using-opencv-developed-a-web-app-to-convert-images-to-manga-style-23p0 
+image conversion
+
+
+========================================================================================
+"""
+
 @ray.remote
 def trainAI(network):
-    time.sleep(10)
-    return 1
+    inputs =  (1,1)
+    op = network.activate(inputs)
+    time.sleep(0.25)
+    return op[0]
 
-#whatever this is doing should be distributed
+
 def eval_genome(genomes, config):
-    sim_instance = SimulationDistributed()
     networks = []
+
     for genomeid, genome in genomes:
         network         = neat.nn.FeedForwardNetwork.create(genome, config)
         networks.append(network)
     
-    fitness_future = [trainAI.remote(network) for network in networks]
-    fitness = ray.get(fitness_future)
+    futs = [trainAI.remote(network) for network in networks]
+    fitness = [ray.get(fut) for fut in futs]
+
+    print(len(fitness), len(futs), len(networks))
+
     for i, (genomeid, genome) in enumerate(genomes):
         genome.fitness = fitness[i]
     
@@ -35,13 +50,13 @@ def runNeat(config):
     pop.add_reporter(stats)
     pop.add_reporter(neat.Checkpointer(10))
 
-    winner = pop.run(eval_genome, 2)
+    winner = pop.run(eval_genome, 5)
     with open("best_pickle_dist", "wb") as f:
         pickle.dump(winner, f)
 
 
 if __name__ =="__main__":
-    ray.init(address='auto', _node_ip_address='192.168.1.5')
+    ray.init()
     LOCALDIR = os.path.dirname(__file__)
     config_path = os.path.join(LOCALDIR, "config.txt")
 
