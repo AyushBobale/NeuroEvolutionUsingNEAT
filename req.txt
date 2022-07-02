@@ -1,0 +1,4 @@
+pygame
+pymunk
+python-neat
+ray[default]

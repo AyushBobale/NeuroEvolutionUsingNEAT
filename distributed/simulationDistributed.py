@@ -2,38 +2,17 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 import math
+import neat
+import os
+import sys
+sys.path.insert(0, 'C:\\Users\\Ayush\\Documents\\Documents folder\\NeuroEvolutionUsingNEAT\\')
+
 from organism import Organsim
 from human import Human
 from bipedal import Bipedal
-import neat
-import os
-import ray
 
-"""
-This simulation wont properly scale with all resolutions
-prefered aspect ration 16:9 prefered resolution 1980,1080 1270, 720
 
-"""
-
-def run(sim_instance):
-    running  = True
-    sim_instance.createBoundaries()
-    new_org = Human(sim_instance.space, sim_instance.width, sim_instance.height)
-    
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                break
-            #new_org.moveHuman(event)
-            sim_instance.moveCamera(event)
-            new_org.moveHuman(event, 2)
-        sim_instance.fpsCheck()
-        sim_instance.draw()
-        sim_instance.step()
-    pygame.quit()
-
-class SimulationNoBounds:
+class SimulationDistributed:
     def __init__(self, width, height, fps, dt=None):
         pygame.init()
         pygame.font.init()
@@ -62,6 +41,18 @@ class SimulationNoBounds:
         self.translation    = pymunk.Transform()
         self.draw_options   = pymunk.pygame_util.DrawOptions(self.window) 
         self.debug_draw     = pymunk.SpaceDebugDrawOptions()
+
+        rects = [ 
+            [( self.width/2,    self.height - 10),          (self.width * 10,            20)]
+        ]
+        for pos, size in rects:
+            body                = pymunk.Body(body_type=pymunk.Body.STATIC)
+            body.position       = pos
+            shape               = pymunk.Poly.create_box(body, size)
+            shape.elasticity    = 0.4
+            shape.friction      = 0.5
+            self.space.add(body, shape)
+
     
     def draw(self):
         
@@ -133,42 +124,3 @@ class SimulationNoBounds:
                 self.left = False
             if event.key == pygame.K_RIGHT:
                 self.right = False
-
-    def trainAI(self, networks, frames, force_multiplier=0.1):
-        frame_count = 0
-        run = True
-        self.createBoundaries()
-        organisms = [Human(self.space, self.width, self.height) for network in networks]
-        """ Add the new class here """
-        while run:
-            if frame_count > frames:
-                fitness = []
-                for organism in organisms:
-                    fitness.append(organism.getFitness())
-                return fitness
-                
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                self.moveCamera(event)
-            
-            for i, organism in enumerate(organisms):
-                inputs = organism.getState()
-                output = networks[i].activate(inputs)
-                organism.moveAI(output, force_multiplier)
-
-            self.step()
-            self.fpsCheck()
-            self.draw()
-            frame_count += 1
-
-
-if __name__ == "__main__":
-    LOCALDIR = os.path.dirname(__file__)
-    config_path = os.path.join(LOCALDIR, "config.txt")
-
-    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                         config_path)
-    sim = SimulationNoBounds(1270, 720, 60)
-    run(sim)
